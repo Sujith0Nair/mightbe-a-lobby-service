@@ -6,4 +6,9 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\MatchMakingService.Domain\MatchMakingService.Domain.csproj" />
+      <ProjectReference Include="..\MatchMakingService.Shared\MatchMakingService.Shared.csproj" />
+    </ItemGroup>
+
 </Project>

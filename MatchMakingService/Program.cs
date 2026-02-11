@@ -1,18 +1,23 @@
 using MatchMakingService.Hubs;
+using MatchMakingService.Domain.Interfaces;
+using MatchMakingService.Application.Services;
+using MatchMakingService.Application.Interfaces;
+using MatchMakingService.Infrastructure.Data.Settings;
+using MatchMakingService.Infrastructure.Data.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.Services.AddSignalR();
+builder.Services.AddSignalR().AddStackExchangeRedis(builder.Configuration.GetConnectionString("Redis") ?? throw new InvalidOperationException("Redis Connection Not Configured"));
+builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection(nameof(MongoDbSettings)));
+
+builder.Services.AddSingleton<ILobbyRepository, MongoDbRepository>();
+builder.Services.AddScoped<ILobbyService, LobbyService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
