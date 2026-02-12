@@ -13,7 +13,6 @@ public static class SignalRConstants
     public const string OnLobbyJoined = "LobbyJoined";
     public const string OnLobbyJoinFailed = "LobbyJoinFailed";
     public const string OnPlayerJoined = "PlayerJoined";
-    public const string OnPlayerJoinFailed = "PlayerJoinFailed";
     public const string OnPlayerLeft = "PlayerLeft";
     public const string OnLobbyLocked = "LobbyLocked";
     public const string OnLobbyNotFound = "LobbyNotFound";
