@@ -15,6 +15,7 @@ builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection(nam
 
 builder.Services.AddSingleton<ILobbyRepository, MongoDbRepository>();
 builder.Services.AddScoped<ILobbyService, LobbyService>();
+builder.Services.AddScoped<ILobbyNotifier, LobbyNotifier>();
 
 var app = builder.Build();
 
