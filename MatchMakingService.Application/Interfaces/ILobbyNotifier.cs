@@ -11,4 +11,6 @@ public interface ILobbyNotifier
     public Task NotifyPlayerJoinedAsync(string lobbyCode, string connectionIdOfPlayerJoined, List<Player> currentPlayers);
     public Task NotifyPlayerLeftAsync(string lobbyCode, string connectionIdOfPlayerLeft, List<Player> currentPlayers);
     public Task NotifyLobbyLockedAsync(string lobbyCode, List<Player> currentPlayers);
+    public Task NotifyLobbyNotFoundAsync(string connectionId);
+    public Task NotifyLobbyNotFoundAsync(string connectionId, string lobbyCode);
 }

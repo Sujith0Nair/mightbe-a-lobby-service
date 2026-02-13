@@ -5,8 +5,7 @@ using MatchMakingService.Application.Interfaces;
 
 namespace MatchMakingService.Hubs;
 
-public class LobbyNotifier(IHubContext<LobbyHub> hubContext, ILogger<LobbyNotifier> logger)
-    : ILobbyNotifier
+public class LobbyNotifier(IHubContext<LobbyHub> hubContext) : ILobbyNotifier
 {
     private IGroupManager GroupManager => hubContext.Groups;
     private IHubClients Clients => hubContext.Clients;
@@ -41,11 +40,21 @@ public class LobbyNotifier(IHubContext<LobbyHub> hubContext, ILogger<LobbyNotifi
 
     public async Task NotifyPlayerLeftAsync(string lobbyCode, string connectionIdOfPlayerLeft, List<Player> currentPlayers)
     {
-        throw new NotImplementedException();
+        await Clients.Group(lobbyCode).SendAsync(SignalRConstants.OnPlayerLeft, connectionIdOfPlayerLeft, currentPlayers);
     }
 
     public async Task NotifyLobbyLockedAsync(string lobbyCode, List<Player> currentPlayers)
     {
         await Clients.Group(lobbyCode).SendAsync(SignalRConstants.OnLobbyLocked, currentPlayers);
+    }
+
+    public async Task NotifyLobbyNotFoundAsync(string connectionId)
+    {
+        await Clients.Client(connectionId).SendAsync(SignalRConstants.OnLobbyNotFound);
+    }
+
+    public async Task NotifyLobbyNotFoundAsync(string connectionId, string lobbyCode)
+    {
+        await Clients.Client(connectionId).SendAsync(SignalRConstants.OnLobbyNotFound, lobbyCode);
     }
 }

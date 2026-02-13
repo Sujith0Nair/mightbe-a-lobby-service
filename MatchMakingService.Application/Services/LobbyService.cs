@@ -89,33 +89,51 @@ public class LobbyService(ILobbyRepository lobbyRepository, ILobbyNotifier lobby
         }
     }
 
-    public async Task LeaveLobbyAsync(string playerConnectionId)
+    public async Task<Result> LeaveLobbyAsync(string playerConnectionId)
     {   
         var lobby = await lobbyRepository.FindLobbyByPlayerConnectionIdAsync(playerConnectionId);
         if (lobby == null)
         {
-            return;
+            await lobbyNotifier.NotifyLobbyNotFoundAsync(playerConnectionId);
+            return Result.Fail("Lobby not found");
         }
         
+        await RemovePlayerFromLobby(lobby, playerConnectionId);
+        return Result.Success();
+    }
+
+    public async Task<Result> LeaveLobbyAsync(string lobbyCode, string playerConnectionId)
+    {
+        var lobby = await lobbyRepository.GetLobbyByCodeAsync(lobbyCode);
+        if (lobby == null)
+        {
+            await lobbyNotifier.NotifyLobbyNotFoundAsync(playerConnectionId, lobbyCode);
+            return Result.Fail($"Lobby with code '{lobbyCode}' not found");
+        }
+
+        if (lobby.Players.All(x => x.ConnectionId != playerConnectionId))
+        {
+            await lobbyNotifier.NotifyLobbyNotFoundAsync(playerConnectionId, lobbyCode);
+            return Result.Fail($"No player with the connection id '{playerConnectionId}' is found in lobby '{lobby.Code}'");
+        }
+
+        await RemovePlayerFromLobby(lobby, playerConnectionId);
+        return Result.Success();
+    }
+
+    private async Task RemovePlayerFromLobby(Lobby lobby, string playerConnectionId)
+    {
         lobby.Players.RemoveAll(x => x.ConnectionId == playerConnectionId);
         lobby.LastActivity = DateTime.UtcNow;
         if (lobby.Players.Count == 0)
         {
             await lobbyRepository.DeleteLobbyAsync(lobby);
-            // We can voluntarily disconnect connection?
         }
         else
         {
             await lobbyRepository.UpdateLobbyAsync(lobby);
+            await lobbyNotifier.NotifyPlayerLeftAsync(lobby.Code, playerConnectionId, lobby.Players);
         }
-    }
-
-    public async Task<Result<Lobby>> GetLobbyByCodeAsync(string lobbyCode)
-    {
-        var lobby = await lobbyRepository.GetLobbyByCodeAsync(lobbyCode);
-        return lobby == null ? 
-            Result<Lobby>.Fail($"LobbyCode: {lobbyCode} not found") : 
-            Result<Lobby>.Success(lobby);
     }
 
     private static string GenerateUniqueLobbyCode()

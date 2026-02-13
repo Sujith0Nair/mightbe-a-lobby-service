@@ -43,6 +43,26 @@ public class LobbyHub(ILobbyService lobbyService, ILogger<LobbyHub> logger) : Hu
         var lobby = result.Value!;
         logger.LogInformation("Lobby with code: {LobbyCode} and user: {UserName}", lobby.Code, userName);
     }
-    
-    // Kick user - use case needs to be written
+
+    public async Task LeaveLobbyAsync(string lobbyCode)
+    {
+        await RemoveConnectionFromLobby(lobbyCode, Context.ConnectionId);
+    }
+
+    public async Task KickUserAsync(string lobbyCode, string connectionId)
+    {
+        await RemoveConnectionFromLobby(lobbyCode, connectionId);
+    }
+
+    private async Task RemoveConnectionFromLobby(string lobbyCode, string connectionId)
+    {
+        var result = await lobbyService.LeaveLobbyAsync(lobbyCode, connectionId);
+        if (!result.IsSuccessful)
+        {
+            logger.LogError("Failed to leave lobby: {ErrorMessage}", result.ErrorMessage ?? "Unknown error!");
+            return;
+        }
+        
+        logger.LogInformation("Lobby with code: {LobbyCode} and connection id: {ConnectionId} has left the room!", lobbyCode, Context.ConnectionId);
+    }
 }
