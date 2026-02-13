@@ -5,7 +5,7 @@ using MatchMakingService.Application.Interfaces;
 
 namespace MatchMakingService.Application.Services;
 
-public class LobbyService(ILobbyRepository lobbyRepository, ILobbyNotifier lobbyNotifier) : ILobbyService
+public class LobbyService(ILobbyRepository lobbyRepository, ILobbyNotifier lobbyNotifier, ILobbyCache lobbyCache, ILobbyCodeGenerator lobbyCodeGenerator) : ILobbyService
 {
     // Due to internet speed differences on client side - when the last player joins, we let the lobby join message to have reached
     // and processed - post which we move ahead with the room full and lock message. Since, order in this use case is important.
@@ -16,11 +16,13 @@ public class LobbyService(ILobbyRepository lobbyRepository, ILobbyNotifier lobby
     {
         try
         {
-            var lobbyCode = GenerateUniqueLobbyCode();
-            while (await lobbyRepository.DoesLobbyCodeExistAsync(lobbyCode))
+            var result = await lobbyCodeGenerator.GenerateCodeAsync();
+            if (!result.IsSuccessful)
             {
-                lobbyCode = GenerateUniqueLobbyCode();
+                return Result<Lobby>.Fail(result.ErrorMessage!);
             }
+
+            var lobbyCode = result.Value!;
 
             var creator = new Player { ConnectionId = creatorConnectionId, UserName = creatorUserName };
             var newLobby = new Lobby
@@ -47,6 +49,12 @@ public class LobbyService(ILobbyRepository lobbyRepository, ILobbyNotifier lobby
     {
         try
         {
+            var result = await lobbyCache.GetLobbyAsync(lobbyCode);
+            if (result.IsSuccessful)
+            {
+                return result;
+            }
+            
             var lobby = await lobbyRepository.GetLobbyByCodeAsync(lobbyCode);
             if (lobby == null)
             {
@@ -80,7 +88,8 @@ public class LobbyService(ILobbyRepository lobbyRepository, ILobbyNotifier lobby
             {
                 await lobbyNotifier.NotifyLobbyLockedAsync(lobbyCode, lobby.Players);
             }
-        
+            
+            await lobbyCache.SetLobbyAsync(lobbyCode, lobby);
             return Result<Lobby>.Success(lobby);
         }
         catch (Exception exception)
@@ -128,16 +137,13 @@ public class LobbyService(ILobbyRepository lobbyRepository, ILobbyNotifier lobby
         if (lobby.Players.Count == 0)
         {
             await lobbyRepository.DeleteLobbyAsync(lobby);
+            await lobbyCache.RemoveLobbyAsync(lobby.Code);
         }
         else
         {
             await lobbyRepository.UpdateLobbyAsync(lobby);
+            await lobbyCache.SetLobbyAsync(lobby.Code, lobby);
             await lobbyNotifier.NotifyPlayerLeftAsync(lobby.Code, playerConnectionId, lobby.Players);
         }
-    }
-
-    private static string GenerateUniqueLobbyCode()
-    {
-        return Guid.NewGuid().ToString("N")[..6].ToUpper();
     }
 }

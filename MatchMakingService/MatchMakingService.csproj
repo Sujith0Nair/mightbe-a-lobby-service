@@ -10,10 +10,12 @@
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.11"/>
         <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.2.9" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.StackExchangeRedis" Version="9.0.13" />
+        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.3" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\MatchMakingService.Application\MatchMakingService.Application.csproj" />
+      <ProjectReference Include="..\MatchMakingService.Infrastructure.Caching\MatchMakingService.Infrastructure.Caching.csproj" />
       <ProjectReference Include="..\MatchMakingService.Infrastructure.Data\MatchMakingService.Infrastructure.Data.csproj" />
     </ItemGroup>
 
