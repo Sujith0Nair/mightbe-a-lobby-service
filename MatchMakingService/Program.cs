@@ -1,5 +1,6 @@
 using MatchMakingService.Hubs;
 using MatchMakingService.Domain.Interfaces;
+using MatchMakingService.BackgroundServices;
 using MatchMakingService.Application.Services;
 using MatchMakingService.Application.Interfaces;
 using MatchMakingService.Infrastructure.Caching;
@@ -23,9 +24,10 @@ builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection(nam
 
 builder.Services.AddSingleton<ILobbyCache, LobbyCache>();
 builder.Services.AddSingleton<ILobbyRepository, MongoDbRepository>();
-builder.Services.AddSingleton<ILobbyCodeGenerator, RedisLobbyCodeGenerator>();
+builder.Services.AddSingleton<ILobbyCodePool, RedisLobbyCodePool>();
 builder.Services.AddScoped<ILobbyService, LobbyService>();
 builder.Services.AddScoped<ILobbyNotifier, LobbyNotifier>();
+builder.Services.AddHostedService<LobbyCodeRecyclingServices>();
 
 var app = builder.Build();
 
