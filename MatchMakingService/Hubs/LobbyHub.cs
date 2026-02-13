@@ -3,7 +3,7 @@ using MatchMakingService.Application.Interfaces;
 
 namespace MatchMakingService.Hubs;
 
-public class LobbyHub(ILobbyService lobbyService, ILogger<LobbyHub> logger) : Hub
+public class LobbyHub(ILobbyService lobbyService, ILogger<LobbyHub> logger) : Hub<ILobbyNotificationClient>
 {
     public override Task OnConnectedAsync()
     {
