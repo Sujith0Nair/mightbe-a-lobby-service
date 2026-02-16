@@ -8,8 +8,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatchMakingService.Applicat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatchMakingService.Infrastructure.Data", "MatchMakingService.Infrastructure.Data\MatchMakingService.Infrastructure.Data.csproj", "{6EABA153-23C8-4F24-B44C-0F80B7A52837}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatchMakingService.Infrastructure.Messaging", "MatchMakingService.Infrastructure.Messaging\MatchMakingService.Infrastructure.Messaging.csproj", "{C9148EE0-4128-4BD9-A30C-F80001C30416}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatchMakingService.Shared", "MatchMakingService.Shared\MatchMakingService.Shared.csproj", "{DED8D60D-5D14-4ADA-BB57-D055973C4A67}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatchMakingService.Infrastructure.Caching", "MatchMakingService.Infrastructure.Caching\MatchMakingService.Infrastructure.Caching.csproj", "{9C5BD181-DE1F-4836-97F3-354BD460D551}"
@@ -36,10 +34,6 @@ Global
 		{6EABA153-23C8-4F24-B44C-0F80B7A52837}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EABA153-23C8-4F24-B44C-0F80B7A52837}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EABA153-23C8-4F24-B44C-0F80B7A52837}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C9148EE0-4128-4BD9-A30C-F80001C30416}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C9148EE0-4128-4BD9-A30C-F80001C30416}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C9148EE0-4128-4BD9-A30C-F80001C30416}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C9148EE0-4128-4BD9-A30C-F80001C30416}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DED8D60D-5D14-4ADA-BB57-D055973C4A67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DED8D60D-5D14-4ADA-BB57-D055973C4A67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DED8D60D-5D14-4ADA-BB57-D055973C4A67}.Release|Any CPU.ActiveCfg = Release|Any CPU

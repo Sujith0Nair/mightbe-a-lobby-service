@@ -13,8 +13,8 @@ public class Result<T>
         ErrorMessage = errorMessage;
     }
 
-    public static Result<T> Success(T value) => new Result<T>(true, value, null);
-    public static Result<T> Fail(string errorMessage, T? value = default) => new Result<T>(false, value, errorMessage);
+    public static Result<T> Success(T value) => new(true, value, null);
+    public static Result<T> Fail(string errorMessage, T? value = default) => new(false, value, errorMessage);
 }
 
 public class Result
@@ -28,6 +28,6 @@ public class Result
         ErrorMessage = errorMessage;;
     }
 
-    public static Result Success() => new Result(true, null);
-    public static Result Fail(string errorMessage) => new Result(false, errorMessage);
+    public static Result Success() => new(true, null);
+    public static Result Fail(string errorMessage) => new(false, errorMessage);
 }

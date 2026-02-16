@@ -1,3 +1,4 @@
+using RabbitMQ.Client;
 using MatchMakingService.Hubs;
 using MatchMakingService.Domain.Interfaces;
 using MatchMakingService.BackgroundServices;
@@ -21,7 +22,6 @@ builder.Services.AddStackExchangeRedisCache(options =>
 });
 builder.Services.AddSignalR().AddStackExchangeRedis(redisConnection);
 builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection(nameof(MongoDbSettings)));
-
 builder.Services.AddSingleton<ILobbyCache, LobbyCache>();
 builder.Services.AddSingleton<ILobbyRepository, MongoDbRepository>();
 builder.Services.AddSingleton<ILobbyCodePool, RedisLobbyCodePool>();

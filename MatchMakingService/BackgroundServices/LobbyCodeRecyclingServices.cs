@@ -6,7 +6,7 @@ namespace MatchMakingService.BackgroundServices;
 public class LobbyCodeRecyclingServices(ILogger<LobbyCodeRecyclingServices> logger, IServiceProvider serviceProvider)
     : IHostedService, IDisposable
 {
-    private Timer? _timer = null;
+    private Timer? _timer;
     
     public Task StartAsync(CancellationToken cancellationToken)
     {
@@ -57,6 +57,7 @@ public class LobbyCodeRecyclingServices(ILogger<LobbyCodeRecyclingServices> logg
 
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
         _timer?.Dispose();
     }
 }
